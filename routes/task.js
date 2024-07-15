@@ -32,6 +32,7 @@ router.get('/:userid', async (req, res) => {
 });
 
 
+
 // Create a new task
 router.post('/create', async (req, res) => {
   try {
@@ -43,6 +44,7 @@ router.post('/create', async (req, res) => {
     res.status(500).json({ message: 'Server Error', error });
   }
 });
+
 
 // Edit a task
 router.put('/edit/:id', async (req, res) => {
@@ -58,6 +60,20 @@ router.put('/edit/:id', async (req, res) => {
     res.status(500).json({ message: 'Server Error', error });
   }
 });
+//completed task
+router.put('/complete/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedTask = await Task.findByIdAndUpdate(id, { completed: true }, { new: true });
+    if (!updatedTask) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error', error });
+  }
+});
+
 
 // Delete a task
 router.delete('/delete/:id', async (req, res) => {
